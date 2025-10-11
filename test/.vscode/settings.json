@@ -1,0 +1,17 @@
+{
+    "al.ruleSetPath": "../ruleset.json",
+    "al.enableCodeAnalysis": true,
+    "al.codeAnalyzers": [
+        "${CodeCop}",
+        "${PerTenantExtensionCop}",
+        "${UICop}"
+    ],
+    "CRS.ObjectNameSuffix": " BC365DT",
+    "CRS.RemoveSuffixFromFilename": true,
+    "CRS.RemovePrefixFromFilename": true,
+    "CRS.ObjectNamePrefix": "",
+    "CRS.FileNamePatternExtensions": "<ObjectNameShort>.<ObjectTypeShortPascalCase>.al",
+    "CRS.FileNamePattern": "<ObjectNameShort>.<ObjectTypeShortPascalCase>.al",
+    "CRS.AlSubFolderName": "Source",
+    "CRS.FileNamePatternPageCustomizations": "<ObjectNameShort>.<ObjectTypeShortPascalCase>.al"
+}
