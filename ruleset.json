@@ -1,0 +1,23 @@
+{
+    "name": "Custom Ruleset",
+    "description": "Ruleset for the Compliance extension",
+    "generalAction": "Hidden",
+    "rules": [
+        {
+            "id": "AA0072",
+            "action": "Hidden",
+            "justification": "Standard naming convention. Ignore this warning."
+        },
+        {
+            "id": "AA0215",
+            "action": "Hidden",
+            "justification": "Standard naming convention. Ignore this warning."
+        },
+        {
+            "id" : "AA0232",
+            "action" : "Hidden",
+            "justification" : "Invalid warning, MS Bug"
+        }        
+
+    ]
+}
