@@ -28,6 +28,9 @@ page 63000 "Deduplication Setup BC365D"
         }
     }
 
+    /// <summary>
+    /// Triggered when the page is opened, ensures the setup record exists.
+    /// </summary>
     trigger OnOpenPage()
     begin
         Rec.GetSetup();

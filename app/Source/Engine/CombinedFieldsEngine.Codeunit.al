@@ -7,6 +7,10 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         MissingRecRefErr: Label 'Record with SystemId %1 not found in table %2.', Comment = '%1: SystemId, %2: Table ID';
         MissingSourceDataErr: Label 'Source data does not exist for record with SystemId %1 in table %2.', Comment = '%1: SystemId, %2: Table ID';
 
+    /// <summary>
+    /// Calculates duplications for all records in the specified table.
+    /// </summary>
+    /// <param name="TableId">The ID of the table to process.</param>
     procedure CalculateDuplication(TableId: Integer)
     var
         RecRef: RecordRef;
@@ -20,6 +24,11 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         RecRef.Close();
     end;
 
+    /// <summary>
+    /// Calculates duplications for a specific record in the table.
+    /// </summary>
+    /// <param name="TableId">The ID of the table.</param>
+    /// <param name="SysId">The SystemId of the record.</param>
     procedure CalculateDuplicationForRecord(TableId: Integer; SysId: Guid)
     var
         SourceData: Record "Source Data BC365D";
@@ -57,6 +66,11 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
 
     end;
 
+    /// <summary>
+    /// Loads source data from all records in the specified table.
+    /// </summary>
+    /// <param name="TableId">The ID of the table to load data from.</param>
+    /// <returns>True if data was loaded successfully.</returns>
     procedure LoadDataFromSource(TableId: Integer): Boolean
     var
         EngineEntryField: Record "Engine Entry Field BC365D";
@@ -111,6 +125,12 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         exit(true);
     end;
 
+    /// <summary>
+    /// Loads source data from a specific record in the table.
+    /// </summary>
+    /// <param name="TableId">The ID of the table.</param>
+    /// <param name="SysId">The SystemId of the record.</param>
+    /// <returns>True if data was loaded successfully.</returns>
     procedure LoadDataFromSourceRecord(TableId: Integer; SysId: Guid): Boolean
     begin
         // Implementation to load data for a specific record based on its SystemId

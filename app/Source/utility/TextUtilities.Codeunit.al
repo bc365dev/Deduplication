@@ -3,6 +3,12 @@
 /// </summary>
 codeunit 63000 "Text Utilities BC365D"
 {
+    /// <summary>
+    /// Calculates the Levenshtein distance between two text strings.
+    /// </summary>
+    /// <param name="Text1">The first text string.</param>
+    /// <param name="Text2">The second text string.</param>
+    /// <returns>The number of edits required to transform Text1 into Text2.</returns>
     procedure TextDistance(Text1: Text; Text2: Text): Integer
     var
         Array1: List of [Integer];
@@ -46,6 +52,12 @@ codeunit 63000 "Text Utilities BC365D"
         exit(Array1.Get(StrLen(Text2) + 1));
     end;
 
+    /// <summary>
+    /// Returns the minimum of two integer values.
+    /// </summary>
+    /// <param name="A">The first integer.</param>
+    /// <param name="B">The second integer.</param>
+    /// <returns>The smaller of the two integers.</returns>
     procedure Min(A: Integer; B: Integer): Integer
     begin
         if A < B then
@@ -54,6 +66,13 @@ codeunit 63000 "Text Utilities BC365D"
             exit(B);
     end;
 
+    /// <summary>
+    /// Returns the minimum of three integer values.
+    /// </summary>
+    /// <param name="A">The first integer.</param>
+    /// <param name="B">The second integer.</param>
+    /// <param name="C">The third integer.</param>
+    /// <returns>The smallest of the three integers.</returns>
     local procedure MinimumInt3(A: Integer; B: Integer; C: Integer): Integer
     begin
         exit(Min(Min(A, B), C));

@@ -49,6 +49,9 @@ page 63004 "Source Data Matches BC365D"
                 Image = View;
                 ToolTip = 'View the original source record for the selected source data match.';
 
+                /// <summary>
+                /// Opens the page for the source record.
+                /// </summary>
                 trigger OnAction()
                 begin
                     Rec.ShowSourceRecord();
@@ -62,6 +65,9 @@ page 63004 "Source Data Matches BC365D"
                 Image = View;
                 ToolTip = 'View the related source record for the selected source data match.';
 
+                /// <summary>
+                /// Opens the page for the related record.
+                /// </summary>
                 trigger OnAction()
                 begin
                     Rec.ShowRelatedRecord();

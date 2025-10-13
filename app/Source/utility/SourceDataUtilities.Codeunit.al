@@ -7,6 +7,20 @@ codeunit 63003 "Source Data Utilities BC365D"
         NullGuidErr: Label 'The provided SystemId is a null GUID.';
         NullGuidRelatedErr: Label 'The provided Related SystemId is a null GUID.';
 
+    /// <summary>
+    /// Creates a new source data entry for the specified table and record.
+    /// </summary>
+    /// <param name="TableId">The ID of the table.</param>
+    /// <param name="RecSysId">The SystemId of the record.</param>
+    /// <param name="CombinedFieldData">The combined field data text.</param>
+    /// <returns>True if the entry was inserted successfully.</returns>
+    /// <summary>
+    /// Creates a new source data entry for the specified table and record.
+    /// </summary>
+    /// <param name="TableId">The ID of the table.</param>
+    /// <param name="RecSysId">The SystemId of the record.</param>
+    /// <param name="CombinedFieldData">The combined field data as text.</param>
+    /// <returns>True if the entry was created successfully.</returns>
     procedure CreateSourceDataEntry(TableId: Integer; RecSysId: Guid; CombinedFieldData: Text): Boolean
     var
         SourceData: Record "Source Data BC365D";
@@ -21,6 +35,11 @@ codeunit 63003 "Source Data Utilities BC365D"
         exit(SourceData.Insert(true));
     end;
 
+    /// <summary>
+    /// Checks if any source data entries exist for the specified table.
+    /// </summary>
+    /// <param name="TableId">The ID of the table to check.</param>
+    /// <returns>True if records exist, false otherwise.</returns>
     procedure RecordsExist(TableId: Integer): Boolean
     var
         SourceData: Record "Source Data BC365D";

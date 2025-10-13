@@ -44,6 +44,9 @@ page 63001 "Dedupe Engine Entry BC365D"
                 ToolTip = 'Load source data for the selected table using its deduplication engine.';
                 Enabled = Rec."Table ID" <> 0;
 
+                /// <summary>
+                /// Loads source data for the selected table using its deduplication engine.
+                /// </summary>
                 trigger OnAction()
                 begin
                     Rec.LoadSourceData();
@@ -61,6 +64,9 @@ page 63001 "Dedupe Engine Entry BC365D"
                 Image = RelatedInformation;
                 ToolTip = 'Navigate to the Engine Entry Fields page to manage fields used in deduplication.';
 
+                /// <summary>
+                /// Opens the Engine Entry Fields page filtered to the current table.
+                /// </summary>
                 trigger OnAction()
                 var
                     EngineEntryField: Record "Engine Entry Field BC365D";
@@ -82,6 +88,9 @@ page 63001 "Dedupe Engine Entry BC365D"
                 Image = View;
                 ToolTip = 'Navigate to the Source Data page to view deduplication source data entries.';
 
+                /// <summary>
+                /// Opens the Source Data page filtered to the current table.
+                /// </summary>
                 trigger OnAction()
                 var
                     SourceData: Record "Source Data BC365D";

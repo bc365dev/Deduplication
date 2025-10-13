@@ -43,6 +43,9 @@ page 63003 "Source Data BC365D"
                 Image = Refresh;
                 ToolTip = 'Calculate duplicates for the selected source data entry using the associated deduplication engine.';
 
+                /// <summary>
+                /// Calculates duplicates for the selected source data entry.
+                /// </summary>
                 trigger OnAction()
                 begin
                     Rec.CalculateDuplicates();
@@ -58,6 +61,9 @@ page 63003 "Source Data BC365D"
                 Image = View;
                 ToolTip = 'View the original source record for the selected source data entry.';
 
+                /// <summary>
+                /// Opens the page for the source record.
+                /// </summary>
                 trigger OnAction()
                 begin
                     Rec.ShowSourceRecord();
@@ -70,6 +76,9 @@ page 63003 "Source Data BC365D"
                 Image = View;
                 ToolTip = 'View matches for the selected source data entry.';
 
+                /// <summary>
+                /// Opens the page showing matches for the selected source data entry.
+                /// </summary>
                 trigger OnAction()
                 begin
                     Rec.ShowMatches();

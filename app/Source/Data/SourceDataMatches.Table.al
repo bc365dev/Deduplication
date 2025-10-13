@@ -44,6 +44,9 @@ table 63004 "Source Data Matches BC365D"
         }
     }
 
+    /// <summary>
+    /// Opens the page for the source record using Page Management.
+    /// </summary>
     procedure ShowSourceRecord()
     var
         PageManagement: Codeunit "Page Management";
@@ -55,6 +58,9 @@ table 63004 "Source Data Matches BC365D"
         RecRef.Close();
     end;
 
+    /// <summary>
+    /// Opens the page for the related record using Page Management.
+    /// </summary>
     procedure ShowRelatedRecord()
     var
         PageManagement: Codeunit "Page Management";
