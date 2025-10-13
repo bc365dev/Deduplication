@@ -87,7 +87,7 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
     begin
         if SourceDataUtilities.RecordsExist(TableId) then
             if not ConfirmManagement.GetResponseOrDefault(DataAlreadyExistsQst, true) then
-                exit
+                exit(false)
             else
                 SourceDataUtilities.DeleteExistingRecords(TableId);
 
@@ -116,7 +116,8 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
             if not IsNullGuid(RecRef.Field(RecRef.SystemIdNo()).Value) then
                 SourceDataUtilities.CreateSourceDataEntry(TableId,
                     RecRef.Field(RecRef.SystemIdNo()).Value,
-                    TextUtilities.RemoveSpecialCharacters(CombinedFieldData.ToText(), true, CaseOption::Upper));
+                    TextUtilities.RemoveSpecialCharacters(CombinedFieldData.ToText(), true, CaseOption::Upper),
+                    RecRef.RecordId());
 
         until RecRef.Next() = 0;
 

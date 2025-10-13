@@ -8,6 +8,8 @@ page 63002 "Engine Entry Field BC365D"
     UsageCategory = Administration;
     SourceTable = "Engine Entry Field BC365D";
     Caption = 'Engine Entry Field';
+    DelayedInsert = true;
+    PopulateAllFields = true;
 
     layout
     {

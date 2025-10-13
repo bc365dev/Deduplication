@@ -23,8 +23,19 @@ page 63003 "Source Data BC365D"
                 field("Record SystemId"; Rec."Record SystemId")
                 {
                     ApplicationArea = All;
+                    Visible = false;
+                }
+                field("Record Id"; RecIdText)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Record Id';
+                    ToolTip = 'Record ID of the record in the source table.';
                 }
                 field("Combined Field Data"; Rec."Combined Field Data")
+                {
+                    ApplicationArea = All;
+                }
+                field("Match Count"; Rec."Match Count")
                 {
                     ApplicationArea = All;
                 }
@@ -86,4 +97,12 @@ page 63003 "Source Data BC365D"
             }
         }
     }
+
+    var
+        RecIdText: Text;
+
+    trigger OnAfterGetRecord()
+    begin
+        RecIdText := Format(Rec."Record Id");
+    end;
 }

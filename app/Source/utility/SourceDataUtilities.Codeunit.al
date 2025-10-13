@@ -21,7 +21,7 @@ codeunit 63003 "Source Data Utilities BC365D"
     /// <param name="RecSysId">The SystemId of the record.</param>
     /// <param name="CombinedFieldData">The combined field data as text.</param>
     /// <returns>True if the entry was created successfully.</returns>
-    procedure CreateSourceDataEntry(TableId: Integer; RecSysId: Guid; CombinedFieldData: Text): Boolean
+    procedure CreateSourceDataEntry(TableId: Integer; RecSysId: Guid; CombinedFieldData: Text; RecId: RecordId): Boolean
     var
         SourceData: Record "Source Data BC365D";
     begin
@@ -32,6 +32,7 @@ codeunit 63003 "Source Data Utilities BC365D"
         SourceData."Table ID" := TableId;
         SourceData."Record SystemId" := RecSysId;
         SourceData."Combined Field Data" := CopyStr(CombinedFieldData, 1, 2048);
+        SourceData."Record Id" := RecId;
         exit(SourceData.Insert(true));
     end;
 

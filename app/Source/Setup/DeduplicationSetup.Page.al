@@ -24,6 +24,11 @@ page 63000 "Deduplication Setup BC365D"
                 {
                     Visible = false;
                 }
+                field(Threshold; Rec.Threshold)
+                {
+                    Caption = 'Threshold';
+                    ToolTip = 'Specifies the threshold for deduplication matching.';
+                }
             }
         }
     }

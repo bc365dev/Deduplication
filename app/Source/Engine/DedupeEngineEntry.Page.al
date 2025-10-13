@@ -15,7 +15,10 @@ page 63001 "Dedupe Engine Entry BC365D"
         {
             repeater(Group)
             {
-                field("Table ID"; Rec."Table ID") { }
+                field("Table ID"; Rec."Table ID")
+                {
+                    Visible = false;
+                }
                 field("Table Caption"; Rec."Table Caption") { }
                 field("Engine Type"; Rec."Engine Type") { }
                 field("Loaded Source Records"; Rec."Loaded Source Records") { }
@@ -49,8 +52,8 @@ page 63001 "Dedupe Engine Entry BC365D"
                 /// </summary>
                 trigger OnAction()
                 begin
-                    Rec.LoadSourceData();
-                    Message('Source data loaded for table ID %1 using engine type %2.', Rec."Table ID", Rec."Engine Type");
+                    if Rec.LoadSourceData() then
+                        Message('Source data loaded for table ID %1 using engine type %2.', Rec."Table ID", Rec."Engine Type");
                 end;
             }
         }

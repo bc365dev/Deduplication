@@ -53,12 +53,12 @@ table 63001 "Dedupe Engine Entry BC365D"
         // Add changes to field groups here
     }
 
-    procedure LoadSourceData()
+    procedure LoadSourceData(): Boolean
     var
         EngineFactory: Codeunit "Engine Intf. Factory BC365D";
         DeduplicationEngine: Interface "IEngine BC365D";
     begin
         DeduplicationEngine := EngineFactory.GetEngine(Rec."Table ID");
-        DeduplicationEngine.LoadDataFromSource(Rec."Table ID");
+        exit(DeduplicationEngine.LoadDataFromSource(Rec."Table ID"));
     end;
 }

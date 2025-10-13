@@ -38,7 +38,8 @@ table 63002 "Engine Entry Field BC365D"
                 SelectedField.SetRange(TableNo, Rec."Table ID");
                 if FieldSelection.Open(SelectedField) then begin
                     "Field ID" := SelectedField."No.";
-                    Rec.Modify();
+                    if not Rec.Modify() then
+                        Rec.Insert();
                 end;
             end;
         }

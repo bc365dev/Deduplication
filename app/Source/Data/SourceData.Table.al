@@ -27,6 +27,19 @@ table 63003 "Source Data BC365D"
             Caption = 'Combined Field Data';
             ToolTip = 'Combined data from multiple fields for deduplication purposes.';
         }
+        field(4; "Record Id"; RecordId)
+        {
+            Caption = 'Record Id';
+            ToolTip = 'Record ID of the record in the source table.';
+        }
+        field(5; "Match Count"; Integer)
+        {
+            Caption = 'Match Count';
+            ToolTip = 'Number of matches found for this source data entry.';
+            FieldClass = FlowField;
+            CalcFormula = count("Source Data Matches BC365D" where("Table ID" = FIELD("Table ID"), "Record SystemId" = FIELD("Record SystemId")));
+            Editable = false;
+        }
     }
 
     keys
