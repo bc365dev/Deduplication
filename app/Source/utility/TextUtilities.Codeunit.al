@@ -1,3 +1,6 @@
+/// <summary>
+/// Provides utility functions for text manipulation and comparison, including Levenshtein distance calculation for deduplication purposes.
+/// </summary>
 codeunit 63000 "Text Utilities BC365D"
 {
     procedure TextDistance(Text1: Text; Text2: Text): Integer
@@ -56,5 +59,35 @@ codeunit 63000 "Text Utilities BC365D"
         exit(Min(Min(A, B), C));
     end;
 
+    /// <summary>
+    /// Removes all special characters from the input text, with options to remove spaces and apply case conversion.
+    /// </summary>
+    /// <param name="InputText">The text to process.</param>
+    /// <param name="RemoveSpaces">If true, spaces are also removed.</param>
+    /// <param name="CaseOption">Option for case conversion: None, Upper, or Lower.</param>
+    /// <returns>The processed text with special characters removed and case applied.</returns>
+    procedure RemoveSpecialCharacters(InputText: Text; RemoveSpaces: Boolean; CaseOption: Option None,Upper,Lower): Text
+    var
+        Result: Text;
+        i: Integer;
+        Char: Char;
+    begin
+        for i := 1 to StrLen(InputText) do begin
+            Char := InputText[i];
+            if ((Char >= 65) and (Char <= 90)) or  // A-Z
+               ((Char >= 97) and (Char <= 122)) or // a-z
+               ((Char >= 48) and (Char <= 57)) or  // 0-9
+               (not RemoveSpaces and (Char = 32)) then // space if not removing
+                Result += Char;
+        end;
 
+        case CaseOption of
+            CaseOption::Upper:
+                Result := UpperCase(Result);
+            CaseOption::Lower:
+                Result := LowerCase(Result);
+        end;
+
+        exit(Result);
+    end;
 }
