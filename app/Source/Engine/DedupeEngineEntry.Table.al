@@ -68,7 +68,7 @@ table 63001 "Dedupe Engine Entry BC365D"
 
         SourceData.SetRange("Table ID", Rec."Table ID");
         if not SourceData.IsEmpty() then
-            SourceData.DeleteAll();
+            SourceData.DeleteAll(true);
     end;
 
     /// <summary>
