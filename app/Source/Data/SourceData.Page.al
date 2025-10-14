@@ -19,6 +19,7 @@ page 63003 "Source Data BC365D"
                 field("Table ID"; Rec."Table ID")
                 {
                     ApplicationArea = All;
+                    Visible = false;
                 }
                 field("Record SystemId"; Rec."Record SystemId")
                 {

@@ -15,13 +15,11 @@ page 63001 "Dedupe Engine Entry BC365D"
         {
             repeater(Group)
             {
-                field("Table ID"; Rec."Table ID")
-                {
-                    Visible = false;
-                }
+                field("Table ID"; Rec."Table ID") { }
                 field("Table Caption"; Rec."Table Caption") { }
                 field("Engine Type"; Rec."Engine Type") { }
                 field("Loaded Source Records"; Rec."Loaded Source Records") { }
+                field("Source Data Loaded"; Rec."Source Data Loaded") { }
             }
         }
 

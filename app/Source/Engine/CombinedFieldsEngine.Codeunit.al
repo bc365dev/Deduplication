@@ -36,6 +36,8 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         SourceDataUtilities: Codeunit "Source Data Utilities BC365D";
         TextUtilities: Codeunit "Text Utilities BC365D";
         RecRef: RecordRef;
+        SourceRecId: RecordId;
+        RelatedRecId: RecordId;
         ComparisonLength: Integer;
         Threshold: Integer;
         Distance: Integer;
@@ -47,6 +49,7 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         RecRef.SetLoadFields(RecRef.SystemIdNo());
         if not RecRef.GetBySystemId(SysId) then
             Error(MissingRecRefErr, SysId, TableId);
+        SourceRecId := RecRef.RecordId();
         RecRef.Close();
 
         if not SourceData.Get(TableId, SysId) then
@@ -60,8 +63,17 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         if SourceDataComparison.FindSet() then
             repeat
                 Distance := TextUtilities.TextDistance(SourceData."Combined Field Data", SourceDataComparison."Combined Field Data");
-                if Distance <= Threshold then
-                    SourceDataUtilities.CreateSourceDataMatch(TableId, SysId, SourceDataComparison."Record SystemId", ComparisonLength, Distance);
+                if Distance <= Threshold then begin
+                    Clear(RecRef);
+                    RecRef.Open(TableId);
+                    RecRef.SetLoadFields(RecRef.SystemIdNo());
+                    if not RecRef.GetBySystemId(SourceDataComparison."Record SystemId") then
+                        Error(MissingRecRefErr, SysId, TableId);
+                    RelatedRecId := RecRef.RecordId();
+                    RecRef.Close();
+
+                    SourceDataUtilities.CreateSourceDataMatch(TableId, SysId, SourceDataComparison."Record SystemId", ComparisonLength, Distance, SourceRecId, RelatedRecId);
+                end;
             until SourceDataComparison.Next() = 0;
 
     end;

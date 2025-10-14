@@ -17,22 +17,44 @@ page 63004 "Source Data Matches BC365D"
                 field("Table ID"; Rec."Table ID")
                 {
                     ApplicationArea = All;
+                    Visible = false;
+                    editable = false;
                 }
                 field("Record SystemId"; Rec."Record SystemId")
                 {
                     ApplicationArea = All;
+                    Visible = false;
+                    editable = false;
+                }
+                field("Source Record Id"; SourceRecIdText)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Source Record Id';
+                    ToolTip = 'Record ID of the source record.';
+                    editable = false;
                 }
                 field("Related Record SystemId"; Rec."Related Record SystemId")
                 {
                     ApplicationArea = All;
+                    Visible = false;
+                    editable = false;
+                }
+                field("Related Record Id"; RelatedRecIdText)
+                {
+                    ApplicationArea = All;
+                    Caption = 'Related Record Id';
+                    ToolTip = 'Record ID of the related record.';
+                    editable = false;
                 }
                 field("Comparison Length"; Rec."Comparison Length")
                 {
                     ApplicationArea = All;
+                    editable = false;
                 }
                 field("Distance"; Rec."Distance")
                 {
                     ApplicationArea = All;
+                    editable = false;
                 }
             }
         }
@@ -75,4 +97,14 @@ page 63004 "Source Data Matches BC365D"
             }
         }
     }
+
+    var
+        SourceRecIdText: Text;
+        RelatedRecIdText: Text;
+
+    trigger OnAfterGetRecord()
+    begin
+        SourceRecIdText := Format(Rec."Source Record Id");
+        RelatedRecIdText := Format(Rec."Related Record Id");
+    end;
 }

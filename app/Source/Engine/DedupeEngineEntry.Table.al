@@ -38,6 +38,11 @@ table 63001 "Dedupe Engine Entry BC365D"
             CalcFormula = count("Source Data BC365D" where("Table ID" = FIELD("Table ID")));
             Editable = false;
         }
+        field(5; "Source Data Loaded"; DateTime)
+        {
+            Caption = 'Source Data Loaded';
+            ToolTip = 'Date and time when the source data was last loaded for this table.';
+        }
     }
 
     keys
@@ -48,10 +53,19 @@ table 63001 "Dedupe Engine Entry BC365D"
         }
     }
 
-    fieldgroups
-    {
-        // Add changes to field groups here
-    }
+    trigger OnDelete()
+    var
+        EngineEntryField: Record "Engine Entry Field BC365D";
+        SourceData: Record "Source Data BC365D";
+    begin
+        EngineEntryField.SetRange("Table ID", Rec."Table ID");
+        if not EngineEntryField.IsEmpty() then
+            EngineEntryField.DeleteAll();
+
+        SourceData.SetRange("Table ID", Rec."Table ID");
+        if not SourceData.IsEmpty() then
+            SourceData.DeleteAll();
+    end;
 
     procedure LoadSourceData(): Boolean
     var
@@ -59,6 +73,11 @@ table 63001 "Dedupe Engine Entry BC365D"
         DeduplicationEngine: Interface "IEngine BC365D";
     begin
         DeduplicationEngine := EngineFactory.GetEngine(Rec."Table ID");
-        exit(DeduplicationEngine.LoadDataFromSource(Rec."Table ID"));
+        if DeduplicationEngine.LoadDataFromSource(Rec."Table ID") then begin
+            Rec."Source Data Loaded" := CurrentDateTime();
+            Rec.Modify();
+            exit(true);
+        end else
+            exit(false);
     end;
 }

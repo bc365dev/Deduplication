@@ -50,6 +50,15 @@ table 63003 "Source Data BC365D"
         }
     }
 
+    trigger OnDelete()
+    var
+        SourceDataMatches: Record "Source Data Matches BC365D";
+    begin
+        SourceDataMatches.SetRange("Table ID", Rec."Table ID");
+        if not SourceDataMatches.IsEmpty() then
+            SourceDataMatches.DeleteAll();
+    end;
+
     procedure ShowSourceRecord()
     var
         PageManagement: Codeunit "Page Management";

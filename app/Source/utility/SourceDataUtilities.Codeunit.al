@@ -33,6 +33,9 @@ codeunit 63003 "Source Data Utilities BC365D"
         SourceData."Record SystemId" := RecSysId;
         SourceData."Combined Field Data" := CopyStr(CombinedFieldData, 1, 2048);
         SourceData."Record Id" := RecId;
+
+        OnBeforeCreateSourceDataEntry(SourceData);
+
         exit(SourceData.Insert(true));
     end;
 
@@ -54,10 +57,13 @@ codeunit 63003 "Source Data Utilities BC365D"
         SourceData: Record "Source Data BC365D";
     begin
         SourceData.SetRange("Table ID", TableId);
-        SourceData.DeleteAll();
+
+        OnBeforeDeleteExistingRecords(SourceData);
+
+        SourceData.DeleteAll(true);
     end;
 
-    procedure CreateSourceDataMatch(TableId: Integer; RecSysId: Guid; RelatedRecSysId: Guid; ComparisonLength: Integer; Distance: Integer): Boolean
+    procedure CreateSourceDataMatch(TableId: Integer; RecSysId: Guid; RelatedRecSysId: Guid; ComparisonLength: Integer; Distance: Integer; SourceRecId: RecordId; RelatedRecId: RecordId): Boolean
     var
         SourceDataMatches: Record "Source Data Matches BC365D";
     begin
@@ -73,6 +79,26 @@ codeunit 63003 "Source Data Utilities BC365D"
         SourceDataMatches."Related Record SystemId" := RelatedRecSysId;
         SourceDataMatches."Comparison Length" := ComparisonLength;
         SourceDataMatches."Distance" := Distance;
+        SourceDataMatches."Source Record Id" := SourceRecId;
+        SourceDataMatches."Related Record Id" := RelatedRecId;
+
+        OnBeforeCreateSourceDataMatch(SourceDataMatches);
+
         exit(SourceDataMatches.Insert(true));
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnBeforeCreateSourceDataMatch(var SourceDataMatches: Record "Source Data Matches BC365D")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnBeforeDeleteExistingRecords(var SourceData: Record "Source Data BC365D")
+    begin
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnBeforeCreateSourceDataEntry(var SourceData: Record "Source Data BC365D")
+    begin
     end;
 }

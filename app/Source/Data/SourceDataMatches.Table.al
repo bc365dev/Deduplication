@@ -34,6 +34,16 @@ table 63004 "Source Data Matches BC365D"
             Caption = 'Distance';
             ToolTip = 'Calculated distance metric indicating how similar the records are.';
         }
+        field(6; "Source Record Id"; RecordId)
+        {
+            Caption = 'Source Record Id';
+            ToolTip = 'Record ID of the source record in the table identified by the table ID.';
+        }
+        field(7; "Related Record Id"; RecordId)
+        {
+            Caption = 'Related Record Id';
+            ToolTip = 'Record ID of the related record in the table identified by the table ID.';
+        }
     }
 
     keys
