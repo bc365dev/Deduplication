@@ -102,6 +102,9 @@ page 63003 "Source Data BC365D"
     var
         RecIdText: Text;
 
+    /// <summary>
+    /// Triggered after getting a record to format the RecordId for display.
+    /// </summary>
     trigger OnAfterGetRecord()
     begin
         RecIdText := Format(Rec."Record Id");

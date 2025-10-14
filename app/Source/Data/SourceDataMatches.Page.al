@@ -102,6 +102,9 @@ page 63004 "Source Data Matches BC365D"
         SourceRecIdText: Text;
         RelatedRecIdText: Text;
 
+    /// <summary>
+    /// Triggered after getting a record to format the RecordId fields for display.
+    /// </summary>
     trigger OnAfterGetRecord()
     begin
         SourceRecIdText := Format(Rec."Source Record Id");

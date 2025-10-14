@@ -53,6 +53,10 @@ table 63001 "Dedupe Engine Entry BC365D"
         }
     }
 
+    /// <summary>
+    /// Triggered when a deduplication engine entry record is deleted.
+    /// Cleans up related engine entry fields and source data records.
+    /// </summary>
     trigger OnDelete()
     var
         EngineEntryField: Record "Engine Entry Field BC365D";
@@ -67,6 +71,11 @@ table 63001 "Dedupe Engine Entry BC365D"
             SourceData.DeleteAll();
     end;
 
+    /// <summary>
+    /// Loads source data for the table using its assigned deduplication engine.
+    /// Updates the timestamp when data is successfully loaded.
+    /// </summary>
+    /// <returns>True if the source data was loaded successfully, false otherwise.</returns>
     procedure LoadSourceData(): Boolean
     var
         EngineFactory: Codeunit "Engine Intf. Factory BC365D";

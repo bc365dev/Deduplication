@@ -50,6 +50,10 @@ table 63003 "Source Data BC365D"
         }
     }
 
+    /// <summary>
+    /// Triggered when a source data record is deleted.
+    /// Cleans up related source data matches.
+    /// </summary>
     trigger OnDelete()
     var
         SourceDataMatches: Record "Source Data Matches BC365D";
@@ -59,6 +63,9 @@ table 63003 "Source Data BC365D"
             SourceDataMatches.DeleteAll();
     end;
 
+    /// <summary>
+    /// Opens the page for the source record using Page Management.
+    /// </summary>
     procedure ShowSourceRecord()
     var
         PageManagement: Codeunit "Page Management";

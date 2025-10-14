@@ -150,6 +150,9 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         exit(true);
     end;
 
+    /// <summary>
+    /// Retrieves and caches the deduplication setup configuration.
+    /// </summary>
     local procedure GetDeduplicationSetup()
     begin
         if not HaveSetup then begin

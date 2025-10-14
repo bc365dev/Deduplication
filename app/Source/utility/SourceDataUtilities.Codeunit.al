@@ -52,6 +52,10 @@ codeunit 63003 "Source Data Utilities BC365D"
         exit(not SourceData.IsEmpty());
     end;
 
+    /// <summary>
+    /// Deletes all existing source data records for the specified table.
+    /// </summary>
+    /// <param name="TableId">The ID of the table.</param>
     procedure DeleteExistingRecords(TableId: Integer)
     var
         SourceData: Record "Source Data BC365D";
@@ -63,6 +67,17 @@ codeunit 63003 "Source Data Utilities BC365D"
         SourceData.DeleteAll(true);
     end;
 
+    /// <summary>
+    /// Creates a new source data match entry linking two similar records.
+    /// </summary>
+    /// <param name="TableId">The ID of the table.</param>
+    /// <param name="RecSysId">The SystemId of the source record.</param>
+    /// <param name="RelatedRecSysId">The SystemId of the related record.</param>
+    /// <param name="ComparisonLength">The length of the comparison data.</param>
+    /// <param name="Distance">The calculated distance metric.</param>
+    /// <param name="SourceRecId">The RecordId of the source record.</param>
+    /// <param name="RelatedRecId">The RecordId of the related record.</param>
+    /// <returns>True if the match was created successfully.</returns>
     procedure CreateSourceDataMatch(TableId: Integer; RecSysId: Guid; RelatedRecSysId: Guid; ComparisonLength: Integer; Distance: Integer; SourceRecId: RecordId; RelatedRecId: RecordId): Boolean
     var
         SourceDataMatches: Record "Source Data Matches BC365D";
@@ -87,16 +102,28 @@ codeunit 63003 "Source Data Utilities BC365D"
         exit(SourceDataMatches.Insert(true));
     end;
 
+    /// <summary>
+    /// Integration event raised before creating a source data match.
+    /// </summary>
+    /// <param name="SourceDataMatches">The source data matches record being created.</param>
     [IntegrationEvent(false, false)]
     local procedure OnBeforeCreateSourceDataMatch(var SourceDataMatches: Record "Source Data Matches BC365D")
     begin
     end;
 
+    /// <summary>
+    /// Integration event raised before deleting existing records.
+    /// </summary>
+    /// <param name="SourceData">The source data record being deleted.</param>
     [IntegrationEvent(false, false)]
     local procedure OnBeforeDeleteExistingRecords(var SourceData: Record "Source Data BC365D")
     begin
     end;
 
+    /// <summary>
+    /// Integration event raised before creating a source data entry.
+    /// </summary>
+    /// <param name="SourceData">The source data record being created.</param>
     [IntegrationEvent(false, false)]
     local procedure OnBeforeCreateSourceDataEntry(var SourceData: Record "Source Data BC365D")
     begin
