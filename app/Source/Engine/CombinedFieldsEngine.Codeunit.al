@@ -35,12 +35,12 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         SourceDataComparison: Record "Source Data BC365D";
         SourceDataUtilities: Codeunit "Source Data Utilities BC365D";
         TextUtilities: Codeunit "Text Utilities BC365D";
-        RecRef: RecordRef;
-        SourceRecId: RecordId;
         RelatedRecId: RecordId;
+        SourceRecId: RecordId;
+        RecRef: RecordRef;
         ComparisonLength: Integer;
-        Threshold: Integer;
         Distance: Integer;
+        Threshold: Integer;
     begin
         GetDeduplicationSetup();
 
@@ -85,17 +85,17 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
     /// <returns>True if data was loaded successfully.</returns>
     procedure LoadDataFromSource(TableId: Integer): Boolean
     var
-        EngineEntryField: Record "Engine Entry Field BC365D";
-        SourceDataUtilities: Codeunit "Source Data Utilities BC365D";
+        // EngineEntryField: Record "Engine Entry Field BC365D";
         ConfirmManagement: Codeunit "Confirm Management";
-        TextUtilities: Codeunit "Text Utilities BC365D";
+        SourceDataUtilities: Codeunit "Source Data Utilities BC365D";
+        // TextUtilities: Codeunit "Text Utilities BC365D";
         RecRef: RecordRef;
-        FldRef: FieldRef;
-        CombinedFieldData: TextBuilder;
-        FieldIds: List of [Integer];
-        FldId: Integer;
-        CaseOption: Option None,Upper,Lower;
-        FldVar: Variant;
+    // FldRef: FieldRef;
+    // FldId: Integer;
+    // FieldIds: List of [Integer];
+    // CaseOption: Option None,Upper,Lower;
+    // CombinedFieldData: TextBuilder;
+    // FldVar: Variant;
     begin
         if SourceDataUtilities.RecordsExist(TableId) then
             if not ConfirmManagement.GetResponseOrDefault(DataAlreadyExistsQst, true) then
@@ -103,6 +103,34 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
             else
                 SourceDataUtilities.DeleteExistingRecords(TableId);
 
+        RecRef.Open(TableId);
+        RecRef.SetLoadFields(RecRef.SystemIdNo());
+        if RecRef.FindSet() then
+            repeat
+                LoadDataFromSourceRecord(TableId, RecRef.Field(RecRef.SystemIdNo()).Value);
+            until RecRef.Next() = 0;
+        RecRef.Close();
+    end;
+
+    /// <summary>
+    /// Loads source data from a specific record in the table.
+    /// </summary>
+    /// <param name="TableId">The ID of the table.</param>
+    /// <param name="SysId">The SystemId of the record.</param>
+    /// <returns>True if data was loaded successfully.</returns>
+    procedure LoadDataFromSourceRecord(TableId: Integer; SysId: Guid): Boolean
+    var
+        EngineEntryField: Record "Engine Entry Field BC365D";
+        SourceDataUtilities: Codeunit "Source Data Utilities BC365D";
+        TextUtilities: Codeunit "Text Utilities BC365D";
+        RecRef: RecordRef;
+        FldRef: FieldRef;
+        FldId: Integer;
+        FieldIds: List of [Integer];
+        CaseOption: Option None,Upper,Lower;
+        CombinedFieldData: TextBuilder;
+        FldVar: Variant;
+    begin
         EngineEntryField.SetRange("Table ID", TableId);
         if not EngineEntryField.FindSet() then
             exit;
@@ -114,39 +142,26 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
             RecRef.AddLoadFields(EngineEntryField."Field ID");
         until EngineEntryField.Next() = 0;
 
-        repeat
-            CombinedFieldData.Clear();
-            foreach FldId in FieldIds do begin
-                FldRef := RecRef.Field(FldId);
-                FldVar := FldRef.Value;
-                Case FldRef.Type of
-                    FldRef.Type::Text, FldRef.Type::Code:
-                        CombinedFieldData.Append(Format(FldVar));
-                end;
+        if not RecRef.GetBySystemId(SysId) then
+            Error(MissingRecRefErr, SysId, TableId);
+
+        foreach FldId in FieldIds do begin
+            FldRef := RecRef.Field(FldId);
+            FldVar := FldRef.Value;
+            Case FldRef.Type of
+                FldRef.Type::Text, FldRef.Type::Code:
+                    CombinedFieldData.Append(Format(FldVar));
             end;
+        end;
 
-            if not IsNullGuid(RecRef.Field(RecRef.SystemIdNo()).Value) then
-                SourceDataUtilities.CreateSourceDataEntry(TableId,
-                    RecRef.Field(RecRef.SystemIdNo()).Value,
-                    TextUtilities.RemoveSpecialCharacters(CombinedFieldData.ToText(), true, CaseOption::Upper),
-                    RecRef.RecordId());
-
-        until RecRef.Next() = 0;
+        if not IsNullGuid(RecRef.Field(RecRef.SystemIdNo()).Value) then
+            SourceDataUtilities.CreateSourceDataEntry(TableId,
+                RecRef.Field(RecRef.SystemIdNo()).Value,
+                TextUtilities.RemoveSpecialCharacters(CombinedFieldData.ToText(), true, CaseOption::Upper),
+                RecRef.RecordId());
 
         RecRef.Close();
 
-        exit(true);
-    end;
-
-    /// <summary>
-    /// Loads source data from a specific record in the table.
-    /// </summary>
-    /// <param name="TableId">The ID of the table.</param>
-    /// <param name="SysId">The SystemId of the record.</param>
-    /// <returns>True if data was loaded successfully.</returns>
-    procedure LoadDataFromSourceRecord(TableId: Integer; SysId: Guid): Boolean
-    begin
-        // Implementation to load data for a specific record based on its SystemId
         exit(true);
     end;
 
