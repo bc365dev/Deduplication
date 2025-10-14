@@ -6,6 +6,7 @@ codeunit 63003 "Source Data Utilities BC365D"
     var
         NullGuidErr: Label 'The provided SystemId is a null GUID.';
         NullGuidRelatedErr: Label 'The provided Related SystemId is a null GUID.';
+        MissingTableIdErr: Label 'Table ID cannot be zero.';
 
     /// <summary>
     /// Creates a new source data entry for the specified table and record.
@@ -103,6 +104,59 @@ codeunit 63003 "Source Data Utilities BC365D"
     end;
 
     /// <summary>
+    /// Merges duplicate records using the standard merge duplicate page for supported tables.
+    /// </summary>
+    /// <param name="TableId">The ID of the table.</param>
+    /// <param name="SourceRecordId">The RecordId of the source record.</param>
+    /// <param name="RelatedRecordId">The RecordId of the related record.</param>
+    procedure MergeDuplicate(TableId: Integer; SourceRecordId: RecordId; RelatedRecordId: RecordId)
+    var
+        TempMergeDuplicatesBuffer: Record "Merge Duplicates Buffer" temporary;
+        MergeDuplicatePage: Page "Merge Duplicate";
+        SourceRecRef: RecordRef;
+        RelatedRecRef: RecordRef;
+        SourceFldRef: FieldRef;
+        RelatedFldRef: FieldRef;
+        SourceKeyRef: KeyRef;
+        RelatedKeyRef: KeyRef;
+    begin
+        if TableId = 0 then
+            Error(MissingTableIdErr);
+
+        case TableId of
+            Database::Customer, Database::Vendor, Database::Contact, Database::Item:
+                begin
+                    SourceRecRef.Open(TableId);
+                    SourceRecRef.Get(SourceRecordId);
+                    SourceKeyRef := SourceRecRef.KeyIndex(1);
+                    SourceFldRef := SourceKeyRef.FieldIndex(1);
+
+                    RelatedRecRef.Open(TableId);
+                    RelatedRecRef.Get(RelatedRecordId);
+                    RelatedKeyRef := RelatedRecRef.KeyIndex(1);
+                    RelatedFldRef := RelatedKeyRef.FieldIndex(1);
+
+                    TempMergeDuplicatesBuffer.Validate("Table ID", TableId);
+                    TempMergeDuplicatesBuffer.Validate(Current, SourceFldRef.Value);
+                    TempMergeDuplicatesBuffer.Validate(Duplicate, RelatedFldRef.Value);
+                    TempMergeDuplicatesBuffer.Validate("Current Record ID", SourceRecordId);
+                    TempMergeDuplicatesBuffer.Validate("Duplicate Record ID", RelatedRecordId);
+
+                    OnBeforeSetMergeDuplicatePage(TempMergeDuplicatesBuffer);
+
+                    MergeDuplicatePage.Set(TempMergeDuplicatesBuffer);
+                    MergeDuplicatePage.Run();
+
+                    SourceRecRef.Close();
+                    RelatedRecRef.Close();
+                end;
+            else
+                OnCustomMergeDuplicate(TableId, SourceRecordId, RelatedRecordId);
+        end;
+
+    end;
+
+    /// <summary>
     /// Integration event raised before creating a source data match.
     /// </summary>
     /// <param name="SourceDataMatches">The source data matches record being created.</param>
@@ -126,6 +180,26 @@ codeunit 63003 "Source Data Utilities BC365D"
     /// <param name="SourceData">The source data record being created.</param>
     [IntegrationEvent(false, false)]
     local procedure OnBeforeCreateSourceDataEntry(var SourceData: Record "Source Data BC365D")
+    begin
+    end;
+
+    /// <summary>
+    /// Integration event raised for custom merge duplicate handling.
+    /// </summary>
+    /// <param name="TableId">The ID of the table.</param>
+    /// <param name="SourceRecordId">The RecordId of the source record.</param>
+    /// <param name="RelatedRecordId">The RecordId of the related record.</param>
+    [IntegrationEvent(false, false)]
+    local procedure OnCustomMergeDuplicate(TableId: Integer; SourceRecordId: RecordId; RelatedRecordId: RecordId)
+    begin
+    end;
+
+    /// <summary>
+    /// Integration event raised before setting the merge duplicate page.
+    /// </summary>
+    /// <param name="TempMergeDuplicatesBuffer">The temporary merge duplicates buffer record.</param>
+    [IntegrationEvent(false, false)]
+    local procedure OnBeforeSetMergeDuplicatePage(var TempMergeDuplicatesBuffer: Record "Merge Duplicates Buffer")
     begin
     end;
 }

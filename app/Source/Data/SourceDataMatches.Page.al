@@ -96,6 +96,25 @@ page 63004 "Source Data Matches BC365D"
                 end;
             }
         }
+
+        area(Processing)
+        {
+            action(MergeDuplicate)
+            {
+                Caption = 'Merge Duplicate';
+                ApplicationArea = All;
+                Image = Copy;
+                ToolTip = 'Merge the selected duplicate records in the source table.';
+
+                /// <summary>
+                /// Merges the selected duplicate records.
+                /// </summary>
+                trigger OnAction()
+                begin
+                    Rec.MergeDuplicate();
+                end;
+            }
+        }
     }
 
     var

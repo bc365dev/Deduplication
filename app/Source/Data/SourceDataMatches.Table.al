@@ -81,4 +81,14 @@ table 63004 "Source Data Matches BC365D"
         PageManagement.PageRun(RecRef);
         RecRef.Close();
     end;
+
+    /// <summary>
+    /// Merges the duplicate records using the source data utilities.
+    /// </summary>
+    procedure MergeDuplicate()
+    var
+        SourceDataUtilities: Codeunit "Source Data Utilities BC365D";
+    begin
+        SourceDataUtilities.MergeDuplicate(Rec."Table ID", Rec."Source Record Id", Rec."Related Record Id");
+    end;
 }
