@@ -3,6 +3,7 @@ page 63006 "Diff Control BC365D"
     PageType = UserControlHost;
     ApplicationArea = All;
     UsageCategory = Administration;
+    Editable = false;
 
     layout
     {
@@ -12,12 +13,26 @@ page 63006 "Diff Control BC365D"
             {
                 ApplicationArea = All;
 
-                trigger ControlReady()
+                trigger ControlAddInReady()
+                var
+                    DataText: Text;
                 begin
-                    CurrPage.HighlightDifferences.generateDiff('ADATUMCORPORATIONSTATIONROAD21CB12FB', 'ADATUMCORPORATIONLTDSTATIONROAD22CB12FB');
+                    // Message('ControlAddInReady event fired!');
+                    // CurrPage.HighlightDifferences.ShowSourceData(DataObject);
+                    // DataObject.WriteTo(DataText);
+                    // Message('%1', DataText);
+                    CurrPage.HighlightDifferences.ShowSourceData(DataObject);
                 end;
 
             }
         }
     }
+
+    var
+        DataObject: JsonObject;
+
+    procedure SetDataObject(NewDataObject: JsonObject)
+    begin
+        DataObject := NewDataObject;
+    end;
 }

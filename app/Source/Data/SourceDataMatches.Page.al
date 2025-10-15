@@ -109,8 +109,11 @@ page 63004 "Source Data Matches BC365D"
                 trigger OnAction()
                 var
                     DiffControlPage: Page "Diff Control BC365D";
+                    DataObject: JsonObject;
                 begin
-                    DiffControlPage.RunModal();
+                    Rec.GetSourceMatchData(DataObject);
+                    DiffControlPage.SetDataObject(DataObject);
+                    DiffControlPage.Run();
                 end;
             }
         }

@@ -34,4 +34,6 @@ interface "IEngine BC365D"
     procedure GetDuplicateReportId(): Integer;
 
     procedure RunDuplicatesReport(TableId: Integer);
+
+    procedure GetSourceDataAsJson(SourceDataMatch: Record "Source Data Matches BC365D"; var DataObject: JsonObject);
 }
