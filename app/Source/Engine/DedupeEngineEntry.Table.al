@@ -89,4 +89,16 @@ table 63001 "Dedupe Engine Entry BC365D"
         end else
             exit(false);
     end;
+
+    /// <summary>
+    /// Runs the duplicates report for the table using its assigned deduplication engine.
+    /// </summary>
+    procedure RunDuplicatesReport()
+    var
+        EngineFactory: Codeunit "Engine Intf. Factory BC365D";
+        DeduplicationEngine: Interface "IEngine BC365D";
+    begin
+        DeduplicationEngine := EngineFactory.GetEngine(Rec."Table ID");
+        DeduplicationEngine.RunDuplicatesReport(Rec."Table ID");
+    end;
 }

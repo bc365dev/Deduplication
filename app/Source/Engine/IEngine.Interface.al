@@ -30,4 +30,8 @@ interface "IEngine BC365D"
     /// <param name="SysId">The SystemId of the record.</param>
     /// <returns>True if data was loaded successfully.</returns>
     procedure LoadDataFromSourceRecord(TableId: Integer; SysId: Guid): Boolean;
+
+    procedure GetDuplicateReportId(): Integer;
+
+    procedure RunDuplicatesReport(TableId: Integer);
 }

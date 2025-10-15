@@ -106,5 +106,25 @@ page 63001 "Dedupe Engine Entry BC365D"
                 end;
             }
         }
+
+        area(reporting)
+        {
+            action(RunDuplicatesReport)
+            {
+                Caption = 'Run Duplicates Report';
+                ApplicationArea = All;
+                Image = Report;
+                ToolTip = 'Run the duplicates report for the selected table using its deduplication engine.';
+                Enabled = Rec."Table ID" <> 0;
+
+                /// <summary>
+                /// Runs the duplicates report for the selected table using its deduplication engine.
+                /// </summary>
+                trigger OnAction()
+                begin
+                    Rec.RunDuplicatesReport();
+                end;
+            }
+        }
     }
 }

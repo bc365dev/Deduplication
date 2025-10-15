@@ -157,6 +157,11 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         exit(true);
     end;
 
+    procedure GetDuplicateReportId(): Integer
+    begin
+        exit(Report::"Combined Fields Dup. BC365D");
+    end;
+
     /// <summary>
     /// Retrieves and caches the deduplication setup configuration.
     /// </summary>
@@ -166,5 +171,19 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
             DeduplicationSetup.GetSetup();
             HaveSetup := true;
         end;
+    end;
+
+    /// <summary>
+    /// Runs the duplicates report for the specified table.
+    /// </summary>
+    /// <param name="TableId">The ID of the table to run the report for.</param>
+    procedure RunDuplicatesReport(TableId: Integer)
+    var
+        SourceData: Record "Source Data BC365D";
+        CombinedFieldsDuplicateReport: Report "Combined Fields Dup. BC365D";
+    begin
+        SourceData.SetRange("Table ID", TableId);
+        CombinedFieldsDuplicateReport.SetTableView(SourceData);
+        CombinedFieldsDuplicateReport.Run();
     end;
 }
