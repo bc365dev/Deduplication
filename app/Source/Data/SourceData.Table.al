@@ -77,6 +77,9 @@ table 63003 "Source Data BC365D"
         RecRef.Close();
     end;
 
+    /// <summary>
+    /// Opens the page showing matches for the current source data record.
+    /// </summary>
     procedure ShowMatches()
     var
         SourceDataMatches: Record "Source Data Matches BC365D";
@@ -87,6 +90,9 @@ table 63003 "Source Data BC365D"
         PageManagement.PageRun(SourceDataMatches);
     end;
 
+    /// <summary>
+    /// Calculates duplicates for the current source data record.
+    /// </summary>
     procedure CalculateDuplicates()
     var
         EngineFactory: Codeunit "Engine Intf. Factory BC365D";
@@ -94,5 +100,17 @@ table 63003 "Source Data BC365D"
     begin
         DeduplicationEngine := EngineFactory.GetEngine(Rec."Table ID");
         DeduplicationEngine.CalculateDuplicationForRecord(Rec."Table ID", Rec."Record SystemId");
+    end;
+
+    /// <summary>
+    /// Calculates duplicates for all records in the table associated with this source data entry.
+    /// </summary>
+    procedure CalculateDuplicatesForTable()
+    var
+        EngineFactory: Codeunit "Engine Intf. Factory BC365D";
+        DeduplicationEngine: Interface "IEngine BC365D";
+    begin
+        DeduplicationEngine := EngineFactory.GetEngine(Rec."Table ID");
+        DeduplicationEngine.CalculateDuplication(Rec."Table ID");
     end;
 }

@@ -85,17 +85,9 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
     /// <returns>True if data was loaded successfully.</returns>
     procedure LoadDataFromSource(TableId: Integer): Boolean
     var
-        // EngineEntryField: Record "Engine Entry Field BC365D";
         ConfirmManagement: Codeunit "Confirm Management";
         SourceDataUtilities: Codeunit "Source Data Utilities BC365D";
-        // TextUtilities: Codeunit "Text Utilities BC365D";
         RecRef: RecordRef;
-    // FldRef: FieldRef;
-    // FldId: Integer;
-    // FieldIds: List of [Integer];
-    // CaseOption: Option None,Upper,Lower;
-    // CombinedFieldData: TextBuilder;
-    // FldVar: Variant;
     begin
         if SourceDataUtilities.RecordsExist(TableId) then
             if not ConfirmManagement.GetResponseOrDefault(DataAlreadyExistsQst, true) then

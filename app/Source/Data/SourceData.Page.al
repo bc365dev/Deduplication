@@ -48,6 +48,21 @@ page 63003 "Source Data BC365D"
     {
         area(Processing)
         {
+            action(CalculateDuplicatesForTable)
+            {
+                Caption = 'Calculate Duplicates for Table';
+                ApplicationArea = All;
+                Image = Refresh;
+                ToolTip = 'Calculate duplicates for all source data entries in the table using the associated deduplication engine. Table is taken from the Table Id of the current record.';
+
+                /// <summary>
+                /// Calculates duplicates for all source data entries in the table.
+                /// </summary>
+                trigger OnAction()
+                begin
+                    Rec.CalculateDuplicatesForTable();
+                end;
+            }
             action(CalculateDuplicates)
             {
                 Caption = 'Calculate Duplicates';

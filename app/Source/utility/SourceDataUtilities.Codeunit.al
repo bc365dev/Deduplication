@@ -13,31 +13,35 @@ codeunit 63003 "Source Data Utilities BC365D"
     /// </summary>
     /// <param name="TableId">The ID of the table.</param>
     /// <param name="RecSysId">The SystemId of the record.</param>
-    /// <param name="CombinedFieldData">The combined field data text.</param>
-    /// <returns>True if the entry was inserted successfully.</returns>
-    /// <summary>
-    /// Creates a new source data entry for the specified table and record.
-    /// </summary>
-    /// <param name="TableId">The ID of the table.</param>
-    /// <param name="RecSysId">The SystemId of the record.</param>
     /// <param name="CombinedFieldData">The combined field data as text.</param>
     /// <returns>True if the entry was created successfully.</returns>
     procedure CreateSourceDataEntry(TableId: Integer; RecSysId: Guid; CombinedFieldData: Text; RecId: RecordId): Boolean
     var
         SourceData: Record "Source Data BC365D";
+        Exists: Boolean;
     begin
         if IsNullGuid(RecSysId) then
             Error(NullGuidErr);
 
-        SourceData.Init();
-        SourceData."Table ID" := TableId;
-        SourceData."Record SystemId" := RecSysId;
-        SourceData."Combined Field Data" := CopyStr(CombinedFieldData, 1, 2048);
-        SourceData."Record Id" := RecId;
+        Exists := false;
 
-        OnBeforeCreateSourceDataEntry(SourceData);
+        if not SourceData.Get(TableId, RecSysId) then begin
+            SourceData.Init();
+            SourceData."Table ID" := TableId;
+            SourceData."Record SystemId" := RecSysId;
+            SourceData."Combined Field Data" := CopyStr(CombinedFieldData, 1, 2048);
+            SourceData."Record Id" := RecId;
+        end else begin
+            Exists := true;
+            SourceData."Combined Field Data" := CopyStr(CombinedFieldData, 1, 2048);
+        end;
 
-        exit(SourceData.Insert(true));
+        OnBeforeCreateSourceDataEntry(SourceData, Exists);
+
+        if Exists then
+            exit(SourceData.Modify(true))
+        else
+            exit(SourceData.Insert(true));
     end;
 
     /// <summary>
@@ -82,6 +86,7 @@ codeunit 63003 "Source Data Utilities BC365D"
     procedure CreateSourceDataMatch(TableId: Integer; RecSysId: Guid; RelatedRecSysId: Guid; ComparisonLength: Integer; Distance: Integer; SourceRecId: RecordId; RelatedRecId: RecordId): Boolean
     var
         SourceDataMatches: Record "Source Data Matches BC365D";
+        Exists: Boolean;
     begin
         if IsNullGuid(RecSysId) then
             Error(NullGuidErr);
@@ -89,18 +94,31 @@ codeunit 63003 "Source Data Utilities BC365D"
         if IsNullGuid(RelatedRecSysId) then
             Error(NullGuidRelatedErr);
 
-        SourceDataMatches.Init();
-        SourceDataMatches."Table ID" := TableId;
-        SourceDataMatches."Record SystemId" := RecSysId;
-        SourceDataMatches."Related Record SystemId" := RelatedRecSysId;
-        SourceDataMatches."Comparison Length" := ComparisonLength;
-        SourceDataMatches."Distance" := Distance;
-        SourceDataMatches."Source Record Id" := SourceRecId;
-        SourceDataMatches."Related Record Id" := RelatedRecId;
+        Exists := false;
 
-        OnBeforeCreateSourceDataMatch(SourceDataMatches);
+        if not SourceDataMatches.Get(TableId, RecSysId, RelatedRecSysId) then begin
+            SourceDataMatches.Init();
+            SourceDataMatches."Table ID" := TableId;
+            SourceDataMatches."Record SystemId" := RecSysId;
+            SourceDataMatches."Related Record SystemId" := RelatedRecSysId;
+            SourceDataMatches."Comparison Length" := ComparisonLength;
+            SourceDataMatches."Distance" := Distance;
+            SourceDataMatches."Source Record Id" := SourceRecId;
+            SourceDataMatches."Related Record Id" := RelatedRecId;
+        end else begin
+            Exists := true;
+            SourceDataMatches."Comparison Length" := ComparisonLength;
+            SourceDataMatches."Distance" := Distance;
+            SourceDataMatches."Source Record Id" := SourceRecId;
+            SourceDataMatches."Related Record Id" := RelatedRecId;
+        end;
 
-        exit(SourceDataMatches.Insert(true));
+        OnBeforeCreateSourceDataMatch(SourceDataMatches, Exists);
+
+        if Exists then
+            exit(SourceDataMatches.Modify(true))
+        else
+            exit(SourceDataMatches.Insert(true));
     end;
 
     /// <summary>
@@ -160,8 +178,9 @@ codeunit 63003 "Source Data Utilities BC365D"
     /// Integration event raised before creating a source data match.
     /// </summary>
     /// <param name="SourceDataMatches">The source data matches record being created.</param>
+    /// <param name="exists">True if the record already exists and will be modified, false if it will be inserted.</param>
     [IntegrationEvent(false, false)]
-    local procedure OnBeforeCreateSourceDataMatch(var SourceDataMatches: Record "Source Data Matches BC365D")
+    local procedure OnBeforeCreateSourceDataMatch(var SourceDataMatches: Record "Source Data Matches BC365D"; exists: Boolean)
     begin
     end;
 
@@ -178,8 +197,9 @@ codeunit 63003 "Source Data Utilities BC365D"
     /// Integration event raised before creating a source data entry.
     /// </summary>
     /// <param name="SourceData">The source data record being created.</param>
+    /// <param name="Exists">True if the record already exists and will be modified, false if it will be inserted.</param>
     [IntegrationEvent(false, false)]
-    local procedure OnBeforeCreateSourceDataEntry(var SourceData: Record "Source Data BC365D")
+    local procedure OnBeforeCreateSourceDataEntry(var SourceData: Record "Source Data BC365D"; Exists: Boolean)
     begin
     end;
 
