@@ -1,5 +1,6 @@
 page 63006 "Diff Control BC365D"
 {
+    Caption = 'Data Differences';
     PageType = UserControlHost;
     ApplicationArea = All;
     UsageCategory = Administration;
@@ -14,13 +15,7 @@ page 63006 "Diff Control BC365D"
                 ApplicationArea = All;
 
                 trigger ControlAddInReady()
-                var
-                    DataText: Text;
                 begin
-                    // Message('ControlAddInReady event fired!');
-                    // CurrPage.HighlightDifferences.ShowSourceData(DataObject);
-                    // DataObject.WriteTo(DataText);
-                    // Message('%1', DataText);
                     CurrPage.HighlightDifferences.ShowSourceData(DataObject);
                 end;
 

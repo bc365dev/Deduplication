@@ -4,11 +4,8 @@ controladdin "HighlightDifferences BC365D"
     VerticalStretch = true;
     HorizontalStretch = true;
 
-    Scripts =
-        '.\Source\ControlAddin\JavaScript\difflib-browser.js',
-        '.\Source\ControlAddin\JavaScript\diffview.js';
-
-    StartupScript = '.\Source\ControlAddin\JavaScript\startup.js';
+    StartupScript = '.\Source\ControlAddin\JavaScript\HighlightDifferences.js';
+    StyleSheets = '.\Source\ControlAddin\css\styles.css';
 
     event ControlAddInReady();
 
