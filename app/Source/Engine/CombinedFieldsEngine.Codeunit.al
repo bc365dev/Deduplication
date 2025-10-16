@@ -107,7 +107,7 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
     end;
 
     /// <summary>
-    /// Loads source data from a specific record in the table.
+    /// Loads source data from a specific record.
     /// </summary>
     /// <param name="TableId">The ID of the table.</param>
     /// <param name="SysId">The SystemId of the record.</param>
@@ -159,6 +159,10 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         exit(true);
     end;
 
+    /// <summary>
+    /// Gets the ID of the duplicate report for this engine.
+    /// </summary>
+    /// <returns>The report ID.</returns>
     procedure GetDuplicateReportId(): Integer
     begin
         exit(Report::"Combined Fields Dup. BC365D");
@@ -189,6 +193,11 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         CombinedFieldsDuplicateReport.Run();
     end;
 
+    /// <summary>
+    /// Gets the source data as JSON for the diff control.
+    /// </summary>
+    /// <param name="SourceDataMatch">The source data match record.</param>
+    /// <param name="DataObject">The JSON object to populate.</param>
     procedure GetSourceDataAsJson(SourceDataMatch: Record "Source Data Matches BC365D"; var DataObject: JsonObject)
     var
         SourceData: Record "Source Data BC365D";

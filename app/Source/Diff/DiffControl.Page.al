@@ -26,6 +26,10 @@ page 63006 "Diff Control BC365D"
     var
         DataObject: JsonObject;
 
+    /// <summary>
+    /// Sets the data object for the diff control.
+    /// </summary>
+    /// <param name="NewDataObject">The new JSON object to set.</param>
     procedure SetDataObject(NewDataObject: JsonObject)
     begin
         DataObject := NewDataObject;
