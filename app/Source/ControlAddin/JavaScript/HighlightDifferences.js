@@ -6,8 +6,8 @@ function lcs(a, b) {
 
     for (let i = m - 1; i >= 0; i--) {
         for (let j = n - 1; j >= 0; j--) {
-            if (a[i] === b[j]) dp[i][j] = 1 + dp[i+1][j+1];
-            else dp[i][j] = Math.max(dp[i+1][j], dp[i][j+1]);
+            if (a[i] === b[j]) dp[i][j] = 1 + dp[i + 1][j + 1];
+            else dp[i][j] = Math.max(dp[i + 1][j], dp[i][j + 1]);
         }
     }
 
@@ -15,48 +15,20 @@ function lcs(a, b) {
     let i = 0, j = 0;
     while (i < m && j < n) {
         if (a[i] === b[j]) {
-            result.push({type: 'equal', char: a[i]});
+            result.push({ type: 'equal', char: a[i] });
             i++; j++;
-        } else if (dp[i+1][j] >= dp[i][j+1]) {
-            result.push({type: 'delete', char: a[i++]});
+        } else if (dp[i + 1][j] >= dp[i][j + 1]) {
+            result.push({ type: 'delete', char: a[i++] });
         } else {
-            result.push({type: 'insert', char: b[j++]});
+            result.push({ type: 'insert', char: b[j++] });
         }
     }
-    while (i < m) result.push({type: 'delete', char: a[i++]});
-    while (j < n) result.push({type: 'insert', char: b[j++]});
+    while (i < m) result.push({ type: 'delete', char: a[i++] });
+    while (j < n) result.push({ type: 'insert', char: b[j++] });
     return result;
 }
 
-function lcs(a, b) {
-    const m = a.length, n = b.length;
-    const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
-
-    for (let i = m - 1; i >= 0; i--) {
-        for (let j = n - 1; j >= 0; j--) {
-            if (a[i] === b[j]) dp[i][j] = 1 + dp[i+1][j+1];
-            else dp[i][j] = Math.max(dp[i+1][j], dp[i][j+1]);
-        }
-    }
-
-    const result = [];
-    let i = 0, j = 0;
-    while (i < m && j < n) {
-        if (a[i] === b[j]) {
-            result.push({type: 'equal', char: a[i]});
-            i++; j++;
-        } else if (dp[i+1][j] >= dp[i][j+1]) {
-            result.push({type: 'delete', char: a[i++]});
-        } else {
-            result.push({type: 'insert', char: b[j++]});
-        }
-    }
-    while (i < m) result.push({type: 'delete', char: a[i++]});
-    while (j < n) result.push({type: 'insert', char: b[j++]});
-    return result;
-}
-
-window.ShowSourceData = function(data) {
+window.ShowSourceData = function (data) {
     try {
         const source = data.sourceData || '';
         const related = data.relatedSourceData || '';
@@ -91,7 +63,7 @@ window.ShowSourceData = function(data) {
         // Generate diff for related data
         const diff = lcs(source, related);
         let buffer = '', lastType = null;
-        diff.forEach(({type, char}) => {
+        diff.forEach(({ type, char }) => {
             if (type === 'equal' || type === 'insert') {
                 if (lastType !== type && lastType !== null) {
                     appendSpan(relatedData, buffer, lastType);
@@ -110,18 +82,15 @@ window.ShowSourceData = function(data) {
 
         container.appendChild(table);
 
-        function appendSpan(parent, text, type) {
-            if (!text) return;
-            const span = document.createElement('span');
-            span.textContent = text;
-            if (type === 'insert') span.classList.add('diff-highlight-insert');
-            parent.appendChild(span);
-        }
-
     } catch (err) {
         console.error(err);
     }
 };
 
-
-
+function appendSpan(parent, text, type) {
+    if (!text) return;
+    const span = document.createElement('span');
+    span.textContent = text;
+    if (type === 'insert') span.classList.add('diff-highlight-insert');
+    parent.appendChild(span);
+};
