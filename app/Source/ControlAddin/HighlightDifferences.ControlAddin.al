@@ -9,5 +9,9 @@ controladdin "HighlightDifferences BC365D"
 
     event ControlAddInReady();
 
+    /// <summary>
+    /// Displays the source data using the control add-in with diff highlighting.
+    /// </summary>
+    /// <param name="DataObject">The JSON object containing source and related data.</param>
     procedure ShowSourceData(DataObject: JsonObject);
 }
