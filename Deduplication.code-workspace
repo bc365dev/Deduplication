@@ -6,5 +6,8 @@
     {
       "path": "test"
     }
-  ]
+  ],
+  "settings": {
+    "powershell.cwd": "app"
+  }
 }

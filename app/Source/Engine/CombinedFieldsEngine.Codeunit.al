@@ -102,6 +102,8 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
                 LoadDataFromSourceRecord(TableId, RecRef.Field(RecRef.SystemIdNo()).Value);
             until RecRef.Next() = 0;
         RecRef.Close();
+
+        exit(true);
     end;
 
     /// <summary>
@@ -185,5 +187,18 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         SourceData.SetRange("Table ID", TableId);
         CombinedFieldsDuplicateReport.SetTableView(SourceData);
         CombinedFieldsDuplicateReport.Run();
+    end;
+
+    procedure GetSourceDataAsJson(SourceDataMatch: Record "Source Data Matches BC365D"; var DataObject: JsonObject)
+    var
+        SourceData: Record "Source Data BC365D";
+        RelatedSourceData: Record "Source Data BC365D";
+    begin
+        SourceData.Get(SourceDataMatch."Table ID", SourceDataMatch."Record SystemId");
+        DataObject.Add('sourceData', SourceData."Combined Field Data");
+
+        RelatedSourceData.Get(SourceDataMatch."Table ID", SourceDataMatch."Related Record SystemId");
+        DataObject.Add('relatedSourceData', RelatedSourceData."Combined Field Data");
+
     end;
 }

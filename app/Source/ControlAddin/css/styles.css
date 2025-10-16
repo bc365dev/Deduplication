@@ -1,0 +1,33 @@
+.diff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.diff-table th,
+.diff-table td {
+    padding: 12px;
+    border: 1px solid #d1d1d1;
+    vertical-align: top;
+}
+
+.diff-label {
+    font-weight: 600;
+    width: 150px;
+    background-color: #f8f9fa;
+}
+
+.diff-data {
+    font-family: 'Courier New', monospace;
+    background-color: #ffffff;
+}
+
+.diff-row:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.diff-highlight-insert {
+    background-color: #d4edda;
+}

@@ -95,6 +95,27 @@ page 63004 "Source Data Matches BC365D"
                     Rec.ShowRelatedRecord();
                 end;
             }
+
+            action(ShowDiff)
+            {
+                Caption = 'Show Differences';
+                ApplicationArea = All;
+                Image = View;
+                ToolTip = 'View the differences between the source record and the related record.';
+
+                /// <summary>
+                /// Opens the diff control to show differences between the two records.
+                /// </summary>
+                trigger OnAction()
+                var
+                    DiffControlPage: Page "Diff Control BC365D";
+                    DataObject: JsonObject;
+                begin
+                    Rec.GetSourceMatchData(DataObject);
+                    DiffControlPage.SetDataObject(DataObject);
+                    DiffControlPage.Run();
+                end;
+            }
         }
 
         area(Processing)

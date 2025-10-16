@@ -9,6 +9,8 @@
             "server": "https://bc27",
             "serverInstance": "BC",
             "authentication": "UserPassword",
+            "startupObjectId": 63001,
+            "startupObjectType": "Page",
             "breakOnError": "All",
             "launchBrowser": true,
             "enableLongRunningSqlStatements": true,
