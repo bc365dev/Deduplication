@@ -143,6 +143,9 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         RecRef.Open(TableId);
 
         repeat
+            if EngineEntryField."Part of Field" <> "Part of Field BC365D"::All then
+                EngineEntryField.TestField("Number of Characters");
+
             Clear(FieldConfigurationSetup);
             FieldConfigurationSetup.Add(
                 StrSubstNo(FieldConfigKeyTxt, EngineEntryField."Field ID", EngineEntryField."Part of Field".AsInteger()),
