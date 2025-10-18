@@ -53,12 +53,14 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         SourceRecId := RecRef.RecordId();
         RecRef.Close();
 
+        SourceData.SetLoadFields("Combined Field Data");
         if not SourceData.Get(TableId, SysId) then
             Error(MissingSourceDataErr, SysId, TableId);
 
         ComparisonLength := StrLen(SourceData."Combined Field Data");
         Threshold := ComparisonLength DIV DeduplicationSetup.Threshold;
 
+        SourceDataComparison.SetLoadFields("Combined Field Data");
         SourceDataComparison.SetRange("Table ID", TableId);
         SourceDataComparison.SetFilter("Record SystemId", '<>%1', SysId);
         if SourceDataComparison.FindSet() then
