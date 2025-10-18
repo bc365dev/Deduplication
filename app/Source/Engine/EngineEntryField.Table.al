@@ -56,6 +56,11 @@ table 63002 "Engine Entry Field BC365D"
             Caption = 'Part of Field';
             ToolTip = 'Indicates the part of the field that is considered for deduplication.';
             InitValue = All;
+
+            trigger OnValidate()
+            begin
+                Rec."Number of Characters" := 0;
+            end;
         }
         field(6; "Number of Characters"; Integer)
         {
