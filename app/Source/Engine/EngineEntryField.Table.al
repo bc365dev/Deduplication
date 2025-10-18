@@ -36,6 +36,8 @@ table 63002 "Engine Entry Field BC365D"
                 FieldSelection: Codeunit "Field Selection";
             begin
                 SelectedField.SetRange(TableNo, Rec."Table ID");
+                SelectedField.SetRange(Class, SelectedField.Class::Normal);
+                SelectedField.SetFilter(Type, '%1|%2', SelectedField.Type::Text, SelectedField.Type::Code);
                 if FieldSelection.Open(SelectedField) then begin
                     "Field ID" := SelectedField."No.";
                     if not Rec.Modify() then
