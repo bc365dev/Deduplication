@@ -51,6 +51,22 @@ table 63002 "Engine Entry Field BC365D"
             CalcFormula = lookup(Field."Field Caption" where("No." = FIELD("Field ID"), TableNo = FIELD("Table ID")));
             Editable = false;
         }
+        field(5; "Part of Field"; enum "Part of Field BC365D")
+        {
+            Caption = 'Part of Field';
+            ToolTip = 'Indicates the part of the field that is considered for deduplication.';
+            InitValue = All;
+
+            trigger OnValidate()
+            begin
+                Rec."Number of Characters" := 0;
+            end;
+        }
+        field(6; "Number of Characters"; Integer)
+        {
+            Caption = 'Number of Characters';
+            ToolTip = 'Number of characters from the field to consider for deduplication. Used in conjunction with the Part of Field setting.';
+        }
     }
 
     keys

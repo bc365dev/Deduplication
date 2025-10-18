@@ -6,6 +6,7 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         DataAlreadyExistsQst: Label 'Source data already exists for this table. Do you want to reload it? This will overwrite existing data.';
         MissingRecRefErr: Label 'Record with SystemId %1 not found in table %2.', Comment = '%1: SystemId, %2: Table ID';
         MissingSourceDataErr: Label 'Source data does not exist for record with SystemId %1 in table %2.', Comment = '%1: SystemId, %2: Table ID';
+        FieldConfigKeyTxt: Label '%1-%2', Comment = '%1: Field ID, %2: Part of Field';
 
     /// <summary>
     /// Calculates duplications for all records in the specified table.
@@ -119,12 +120,20 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         TextUtilities: Codeunit "Text Utilities BC365D";
         RecRef: RecordRef;
         FldRef: FieldRef;
-        FldId: Integer;
-        FieldIds: List of [Integer];
+        FieldConfiguration: Dictionary of [Integer, Dictionary of [Text, Integer]];
+        FieldConfigurationKeys: List of [Integer];
+        FieldConfigurationKey: Integer;
+        FieldConfigurationSetup: Dictionary of [Text, Integer];
+        FieldConfigurationSetupEntry: Dictionary of [Text, Integer];
+        FieldConfigurationSetupEntryKeys: List of [Text];
+        FieldConfigurationSetupEntryKey: Text;
+        FieldConfigurationSetupEntryKeyValues: List of [Text];
         CaseOption: Option None,Upper,Lower;
         CombinedFieldData: TextBuilder;
         FldVar: Variant;
+        FieldPart: Integer;
     begin
+        EngineEntryField.SetLoadFields("Field ID", "Number of Characters", "Part of Field");
         EngineEntryField.SetRange("Table ID", TableId);
         if not EngineEntryField.FindSet() then
             exit;
@@ -132,27 +141,50 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         RecRef.Open(TableId);
 
         repeat
-            FieldIds.Add(EngineEntryField."Field ID");
+            Clear(FieldConfigurationSetup);
+            FieldConfigurationSetup.Add(
+                StrSubstNo(FieldConfigKeyTxt, EngineEntryField."Field ID", EngineEntryField."Part of Field".AsInteger()),
+                EngineEntryField."Number of Characters"
+            );
+
+            FieldConfiguration.Add(EngineEntryField."Field ID", FieldConfigurationSetup);
             RecRef.AddLoadFields(EngineEntryField."Field ID");
         until EngineEntryField.Next() = 0;
 
         if not RecRef.GetBySystemId(SysId) then
             Error(MissingRecRefErr, SysId, TableId);
 
-        foreach FldId in FieldIds do begin
-            FldRef := RecRef.Field(FldId);
+        FieldConfigurationKeys := FieldConfiguration.Keys();
+
+        foreach FieldConfigurationKey in FieldConfigurationKeys do begin
+            FldRef := RecRef.Field(FieldConfigurationKey);
             FldVar := FldRef.Value;
-            Case FldRef.Type of
-                FldRef.Type::Text, FldRef.Type::Code:
-                    CombinedFieldData.Append(Format(FldVar));
+
+            FieldConfigurationSetupEntry := FieldConfiguration.Get(FieldConfigurationKey);
+            FieldConfigurationSetupEntryKeys := FieldConfigurationSetupEntry.Keys();
+
+            foreach FieldConfigurationSetupEntryKey in FieldConfigurationSetupEntryKeys do begin
+                FieldConfigurationSetupEntryKeyValues := FieldConfigurationSetupEntryKey.Split('-');
+                Evaluate(FieldPart, FieldConfigurationSetupEntryKeyValues.Get(2));
+                CombinedFieldData.Append(
+                    TextUtilities.GetPartOfFieldAsText(
+                        FldVar,
+                        "Part of Field BC365D".FromInteger(FieldPart),
+                        FieldConfigurationSetupEntry.Get(FieldConfigurationSetupEntryKey)
+                    )
+                );
             end;
         end;
 
-        if not IsNullGuid(RecRef.Field(RecRef.SystemIdNo()).Value) then
-            SourceDataUtilities.CreateSourceDataEntry(TableId,
-                RecRef.Field(RecRef.SystemIdNo()).Value,
-                TextUtilities.RemoveSpecialCharacters(CombinedFieldData.ToText(), true, CaseOption::Upper),
-                RecRef.RecordId());
+        Clear(FieldConfiguration);
+        Clear(FieldConfigurationKeys);
+
+        if CombinedFieldData.Length() > 0 then
+            if not IsNullGuid(RecRef.Field(RecRef.SystemIdNo()).Value) then
+                SourceDataUtilities.CreateSourceDataEntry(TableId,
+                    RecRef.Field(RecRef.SystemIdNo()).Value,
+                    TextUtilities.RemoveSpecialCharacters(CombinedFieldData.ToText(), true, CaseOption::Upper),
+                    RecRef.RecordId());
 
         RecRef.Close();
 
