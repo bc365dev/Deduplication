@@ -125,6 +125,9 @@ codeunit 63000 "Text Utilities BC365D"
 
             FieldValue := Format(FieldVar);
 
+            if FieldValue = '' then
+                exit(FieldValue);
+
             case PartOfField of
                 PartOfField::All:
                     exit(FieldValue);
