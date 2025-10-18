@@ -110,6 +110,13 @@ codeunit 63000 "Text Utilities BC365D"
         exit(Result);
     end;
 
+    /// <summary>
+    /// Returns the specified segment of a text or code field based on the requested part.
+    /// </summary>
+    /// <param name="FieldVar">The field value provided as a Variant that must contain text or code data.</param>
+    /// <param name="PartOfField">Specifies which portion of the field to return, such as All, First, Last, or custom via event subscribers.</param>
+    /// <param name="Length">The number of characters to include when the part requires a length constraint.</param>
+    /// <returns>The extracted field segment or an empty string when the Variant is not text or code.</returns>
     procedure GetPartOfFieldAsText(FieldVar: Variant; PartOfField: Enum "Part of Field BC365D"; Length: Integer): Text
     var
         FieldValue: Text;
@@ -123,16 +130,25 @@ codeunit 63000 "Text Utilities BC365D"
                     exit(FieldValue);
                 PartOfField::First:
                     begin
-                        FieldValue := FieldValue.Substring(0, Length);
+                        FieldValue := FieldValue.Substring(1, Length);
                         exit(FieldValue);
                     end;
                 PartOfField::Last:
                     begin
-                        FieldValue := FieldValue.Substring(StrLen(FieldValue) - Length, Length);
+                        FieldValue := FieldValue.Substring((StrLen(FieldValue) - Length) + 1, Length);
                         exit(FieldValue);
                     end;
+                else begin
+                    OnTextCustomPartOfFieldAsText(FieldValue, PartOfField, Length);
+                    exit(FieldValue);
+                end;
             end;
         end;
 
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnTextCustomPartOfFieldAsText(var FieldValue: Text; PartOfField: Enum "Part of Field BC365D"; Length: Integer)
+    begin
     end;
 }

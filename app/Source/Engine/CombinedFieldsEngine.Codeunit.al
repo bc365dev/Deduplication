@@ -121,7 +121,14 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         FldRef: FieldRef;
         FldId: Integer;
         FieldIds: List of [Integer];
-        FieldSettings: Dictionary of [Integer, Integer];
+        FieldId: Integer;
+        FieldSettings: Dictionary of [Enum "Part of Field BC365D", Integer];
+        Fields: Dictionary of [Integer, Dictionary of [Enum "Part of Field BC365D", Integer]];
+        FieldSetup: List of [Dictionary of [Integer, Dictionary of [Enum "Part of Field BC365D", Integer]]];
+        Fld: Dictionary of [Integer, Dictionary of [Enum "Part of Field BC365D", Integer]];
+        FldSetup: Dictionary of [Enum "Part of Field BC365D", Integer];
+        FldSetupKeys: List of [Enum "Part of Field BC365D"];
+        FldSetupKey: Enum "Part of Field BC365D";
         CaseOption: Option None,Upper,Lower;
         CombinedFieldData: TextBuilder;
         FldVar: Variant;
@@ -135,44 +142,51 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         RecRef.Open(TableId);
 
         repeat
-            FieldIds.Add(EngineEntryField."Field ID");
-            FieldSettings.Add(EngineEntryField."Field ID", EngineEntryField."Number of Characters");
+            // FieldIds.Add(EngineEntryField."Field ID");
+            FieldSettings.Add(EngineEntryField."Part of Field", EngineEntryField."Number of Characters");
+            Fields.Add(EngineEntryField."Field ID", FieldSettings);
+            FieldSetup.Add(Fields);
             RecRef.AddLoadFields(EngineEntryField."Field ID");
         until EngineEntryField.Next() = 0;
 
         if not RecRef.GetBySystemId(SysId) then
             Error(MissingRecRefErr, SysId, TableId);
 
-        for i := 1 to FieldSettings.Count() do begin
-            FldRef := RecRef.Field(FldId);
-            FldVar := FldRef.Value;
+        for i := 1 to FieldSetup.Count() do begin
+            FieldSetup.Get(i, Fld);
 
-            case FldRef.Type of
-                FldRef.Type::Text, FldRef.Type::Code:
-                    begin
+            FieldIds := Fld.Keys();
 
-                    end;
+            foreach FieldId in FieldIds do begin
+                FldRef := RecRef.Field(FieldId);
+                FldVar := FldRef.Value;
+                case FldRef.Type of
+                    FldRef.Type::Text, FldRef.Type::Code:
+                        begin
+                            Fld.Get(FieldId, FldSetup);
+                            FldSetupKeys := FldSetup.Keys();
+                            foreach FldSetupKey in FldSetupKeys do begin
+                                CombinedFieldData.Append(
+                                    TextUtilities.GetPartOfFieldAsText(
+                                    FldVar,
+                                    FldSetupKey,
+                                    FldSetup.Get(FldSetupKey)
+                                ));
+                            end;
+                        end;
+                end;
             end;
+
+            if not IsNullGuid(RecRef.Field(RecRef.SystemIdNo()).Value) then
+                SourceDataUtilities.CreateSourceDataEntry(TableId,
+                    RecRef.Field(RecRef.SystemIdNo()).Value,
+                    TextUtilities.RemoveSpecialCharacters(CombinedFieldData.ToText(), true, CaseOption::Upper),
+                    RecRef.RecordId());
+
+            RecRef.Close();
+
+            exit(true);
         end;
-
-        foreach FldId in FieldIds do begin
-            FldRef := RecRef.Field(FldId);
-            FldVar := FldRef.Value;
-            Case FldRef.Type of
-                FldRef.Type::Text, FldRef.Type::Code:
-                    CombinedFieldData.Append(Format(FldVar));
-            end;
-        end;
-
-        if not IsNullGuid(RecRef.Field(RecRef.SystemIdNo()).Value) then
-            SourceDataUtilities.CreateSourceDataEntry(TableId,
-                RecRef.Field(RecRef.SystemIdNo()).Value,
-                TextUtilities.RemoveSpecialCharacters(CombinedFieldData.ToText(), true, CaseOption::Upper),
-                RecRef.RecordId());
-
-        RecRef.Close();
-
-        exit(true);
     end;
 
     /// <summary>
