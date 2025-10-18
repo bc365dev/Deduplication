@@ -109,4 +109,30 @@ codeunit 63000 "Text Utilities BC365D"
 
         exit(Result);
     end;
+
+    procedure GetPartOfFieldAsText(FieldVar: Variant; PartOfField: Enum "Part of Field BC365D"; Length: Integer): Text
+    var
+        FieldValue: Text;
+    begin
+        if (FieldVar.IsText() or FieldVar.IsCode()) then begin
+
+            FieldValue := Format(FieldVar);
+
+            case PartOfField of
+                PartOfField::All:
+                    exit(FieldValue);
+                PartOfField::First:
+                    begin
+                        FieldValue := FieldValue.Substring(0, Length);
+                        exit(FieldValue);
+                    end;
+                PartOfField::Last:
+                    begin
+                        FieldValue := FieldValue.Substring(StrLen(FieldValue) - Length, Length);
+                        exit(FieldValue);
+                    end;
+            end;
+        end;
+
+    end;
 }

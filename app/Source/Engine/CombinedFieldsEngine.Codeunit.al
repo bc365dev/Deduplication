@@ -121,10 +121,13 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         FldRef: FieldRef;
         FldId: Integer;
         FieldIds: List of [Integer];
+        FieldSettings: Dictionary of [Integer, Integer];
         CaseOption: Option None,Upper,Lower;
         CombinedFieldData: TextBuilder;
         FldVar: Variant;
+        i: Integer;
     begin
+        EngineEntryField.SetLoadFields("Field ID", "Number of Characters");
         EngineEntryField.SetRange("Table ID", TableId);
         if not EngineEntryField.FindSet() then
             exit;
@@ -133,11 +136,24 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
 
         repeat
             FieldIds.Add(EngineEntryField."Field ID");
+            FieldSettings.Add(EngineEntryField."Field ID", EngineEntryField."Number of Characters");
             RecRef.AddLoadFields(EngineEntryField."Field ID");
         until EngineEntryField.Next() = 0;
 
         if not RecRef.GetBySystemId(SysId) then
             Error(MissingRecRefErr, SysId, TableId);
+
+        for i := 1 to FieldSettings.Count() do begin
+            FldRef := RecRef.Field(FldId);
+            FldVar := FldRef.Value;
+
+            case FldRef.Type of
+                FldRef.Type::Text, FldRef.Type::Code:
+                    begin
+
+                    end;
+            end;
+        end;
 
         foreach FldId in FieldIds do begin
             FldRef := RecRef.Field(FldId);

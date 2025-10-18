@@ -33,6 +33,14 @@ page 63002 "Engine Entry Field BC365D"
                 {
                     ApplicationArea = All;
                 }
+                field("Part of Field"; Rec."Part of Field")
+                {
+                    ApplicationArea = All;
+                }
+                field("Number of Characters"; Rec."Number of Characters")
+                {
+                    ApplicationArea = All;
+                }
             }
         }
 
