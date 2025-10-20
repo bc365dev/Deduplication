@@ -100,4 +100,13 @@ table 63004 "Source Data Matches BC365D"
         DeduplicationEngine := EngineFactory.GetEngine(Rec."Table ID");
         DeduplicationEngine.GetSourceDataAsJson(Rec, DataObject);
     end;
+
+    procedure ShowDiffControl(var DataObject: JsonObject)
+    var
+        EngineFactory: Codeunit "Engine Intf. Factory BC365D";
+        DeduplicationEngine: Interface "IEngine BC365D";
+    begin
+        DeduplicationEngine := EngineFactory.GetEngine(Rec."Table ID");
+        DeduplicationEngine.ShowDiffControl(DataObject);
+    end;
 }
