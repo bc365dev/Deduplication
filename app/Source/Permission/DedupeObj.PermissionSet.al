@@ -12,8 +12,12 @@ permissionset 63001 "Dedupe. Obj BC365D"
         codeunit "Engine Intf. Factory BC365D" = X,
         codeunit "Source Data Utilities BC365D" = X,
         codeunit "Text Utilities BC365D" = X,
+        report "Combined Fields Dup. BC365D" = X,
         page "Dedupe Engine Entry BC365D" = X,
         page "Deduplication Setup BC365D" = X,
+        page "Diff Control BC365D" = X,
         page "Engine Entry Field BC365D" = X,
-        page "Source Data BC365D" = X;
+        page "Engine Field ListPart BC365D" = X,
+        page "Source Data BC365D" = X,
+        page "Source Data Matches BC365D" = X;
 }
