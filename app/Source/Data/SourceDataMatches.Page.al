@@ -112,8 +112,7 @@ page 63004 "Source Data Matches BC365D"
                     DataObject: JsonObject;
                 begin
                     Rec.GetSourceMatchData(DataObject);
-                    DiffControlPage.SetDataObject(DataObject);
-                    DiffControlPage.Run();
+                    Rec.ShowDiffControl(DataObject);
                 end;
             }
         }

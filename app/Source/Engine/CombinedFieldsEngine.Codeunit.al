@@ -247,4 +247,12 @@ codeunit 63002 "Combined Fields Engine BC365D" implements "IEngine BC365D"
         DataObject.Add('relatedSourceData', RelatedSourceData."Combined Field Data");
 
     end;
+
+    procedure ShowDiffControl(var DataObject: JsonObject)
+    var
+        DiffControlPage: Page "Diff Control BC365D";
+    begin
+        DiffControlPage.SetDataObject(DataObject);
+        DiffControlPage.Run();
+    end;
 }
